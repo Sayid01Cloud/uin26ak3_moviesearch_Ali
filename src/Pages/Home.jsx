@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";    
-import MovieCard from "../Komponenter/MovieCard";
+import Movies from "../Komponenter/Movies";
 
 function Home() {
     const [movies, setMovies] = useState([]);
+    const [searchText, setSearchText] = useState("");  
 
-const fetchMovies = async () => {
-        const response = await fetch(`https://www.omdbapi.com/?s=james+bond&apikey=5747f724`);
+const fetchMovies = async (searchText) => {
+        const response = await fetch(`https://www.omdbapi.com/?s=${searchText.replace(/\s/g, '+')}&apikey=5747f724`);
         const data = await response.json();
-        setMovies(data.Search);
+        setMovies(data.Search || []);
     };
 
     useEffect(() => {
-        fetchMovies();
-    }, []);
+        if (searchText.length >= 3) {
+            fetchMovies(searchText);
+        } else { fetchMovies("james bond"); }
+    }, [searchText]);
 
-    const [searchText, setSearchText] = useState("");   
+   
    
 
     return (
@@ -26,18 +29,7 @@ const fetchMovies = async () => {
     onChange={(e) => setSearchText(e.target.value)}
 
     />
-            <ul>
-                {movies.map(movie => (
-                    <li key={movie.imdbID}>
-                        <MovieCard 
-                        title={movie.Title}
-                        image={movie.Poster}
-                        releaseDate={movie.Year}
-                        id={movie.imdbID}
-                        />
-                    </li>
-                ))}
-            </ul>
+            <Movies movies={movies} />
         </>
     );
 }

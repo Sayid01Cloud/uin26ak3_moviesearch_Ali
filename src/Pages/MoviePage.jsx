@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import  MovieCard  from "../Komponenter/MovieCard";
+import { useParams } from "react-router-dom";
+
 
 function MoviePage() {
+    const { title } = useParams();
     const [movieData, setMovieData] = useState(null);
     const fetchMovieData = async () => {
-        const response = await fetch(`https://www.omdbapi.com/?apikey=YOUR_API_KEY&t=${id}`);
+        const response = await fetch(`https://www.omdbapi.com/?apikey=5747f724&i=${title}`);
         const data = await response.json();
         setMovieData(data);
     };
@@ -15,14 +17,11 @@ function MoviePage() {
 
     return (
         <>
-        <h1>Movies</h1>
-        <ul>
-            {Movies.map(movie => (
-                <li key={movie.id}>
-                    <MovieCard movie={movie} />
-                </li>
-            ))}
-        </ul>
+      <section>
+        <h1>{movieData?.Title}</h1>
+        <img src = {movieData?.Poster} alt={movieData?.Title} />
+        <p>{movieData?.Year}</p>
+      </section>
         </>
     );
 

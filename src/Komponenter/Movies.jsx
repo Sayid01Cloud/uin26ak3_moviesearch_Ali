@@ -1,25 +1,21 @@
-import { useParams } from "react-router-dom";
-import { useState, useEffect,} from "react";
+import MovieCard from "./MovieCard";
 
-function Movies () {
-    const { id } = useParams();
-    const [movieData, setMovieData] = useState(null);
+function Movies({ movies }) {
+    return (
+        <section>
+            {
+                movies.map(movie => (
+                    <MovieCard 
+                        key={movie.imdbID}
+                        title={movie.Title}
+                        image={movie.Poster}
+                        releaseDate={movie.Year}
+                        imdbID={movie.imdbID}
+                    />
+                ))
+            }
+        </section>
+    )
 
-    const getMovie = async () => { 
-        const response = await fetch (`https://www.omdbapi.com/?apikey=YOUR_API_KEY&t=${id}`)
-        const data = await response.json();
-        setMovieData(data);
-}
-
-useEffect(() => {
-    getMovie();
-}, [id]);
-
-return (
-    <>
-    <h1>{movieData?.title}</h1>
-    <p>{movieData?.overview}</p>
-    </>
-)
 }
 export default Movies;
